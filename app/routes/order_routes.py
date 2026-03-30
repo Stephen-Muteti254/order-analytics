@@ -401,7 +401,7 @@ def create_new_order():
     # --------------------------------------------------
     FREE_ORDER_LIMIT = current_app.config.get("FREE_ORDER_LIMIT", 2)
 
-    unpaid_unassigned_count = count_unpaid_unassigned_orders(user)
+    unpaid_unassigned_count = count_unpaid_unassigned_orders(uid)
 
     # Case 1: User is BELOW limit → allow without balance check
     if unpaid_unassigned_count < FREE_ORDER_LIMIT:
