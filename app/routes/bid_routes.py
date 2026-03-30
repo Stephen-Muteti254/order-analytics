@@ -19,9 +19,14 @@ from app.utils.response_formatter import success_response, error_response
 
 from datetime import datetime, timezone
 from sqlalchemy import or_, and_
-from app.services.wallet_service import safe_debit_wallet
 from app.services.email_service import (
     send_bid_accepted_email
+)
+
+from app.services.wallet_service import (
+    safe_debit_wallet,
+    has_sufficient_balance,
+    get_wallet_balance
 )
 
 bp = Blueprint("bids", __name__, url_prefix="/api/v1")
@@ -417,20 +422,46 @@ def client_update_bid_status(bid_id):
 
         order = bid.order
 
+        if order.payment_status == "paid":
+            return error_response(
+                "ALREADY_PAID",
+                "This order has already been paid.",
+                status=400
+            )
+
+        required_amount = float(order.client_budget)
+
+        # --- PRE-CHECK (clean + informative) ---
+        if not has_sufficient_balance(client_id, required_amount):
+            wallet_info = get_wallet_balance(client_id)
+
+            return error_response(
+                "INSUFFICIENT_FUNDS",
+                (
+                    f"Insufficient wallet balance. "
+                    f"Required: ${required_amount}, "
+                    f"Available: ${wallet_info['available_balance']}"
+                ),
+                status=402
+            )
+
+        # --- ACTUAL DEBIT (safe, transactional) ---
         try:
             safe_debit_wallet(
                 user_id=client_id,
-                amount=order.client_budget,
+                amount=required_amount,
                 tx_type="payment",
                 description=f"Payment for order {order.id}",
                 ref_type="order",
                 ref_id=order.id
             )
-        except ValueError:
+
+            order.payment_status = "paid"
+        except Exception:
             return error_response(
-                "INSUFFICIENT_FUNDS",
-                "Your wallet balance is insufficient to accept this bid. Please top up your wallet.",
-                status=402
+                "PAYMENT_ERROR",
+                "Something went wrong while processing payment. Please try again.",
+                status=500
             )
 
         # ---- Only after successful debit ----
