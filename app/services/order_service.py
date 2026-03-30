@@ -16,6 +16,18 @@ def save_uploaded_file(file, upload_dir):
     return unique_name, file_path
 
 
+def count_unpaid_unassigned_orders(user_id):
+    return (
+        db.session.query(Order)
+        .filter(
+            Order.client_id == user_id,
+            Order.writer_id.is_(None),
+            Order.payment_status == "unpaid"
+        )
+        .count()
+    )
+
+
 def create_order(user, form_data, files=None):
     order_id = f"ORD-{uuid.uuid4().hex[:8]}"
     order = Order(

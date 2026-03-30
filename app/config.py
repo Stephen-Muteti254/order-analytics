@@ -25,6 +25,8 @@ class Config:
 
     RATELIMIT_HEADERS_ENABLED = True
 
+    FREE_ORDER_LIMIT = os.getenv("FREE_ORDER_LIMIT", 2)
+
     ACCESS_EXPIRES = int(os.getenv("ACCESS_EXPIRES", 86400))
     REFRESH_EXPIRES = int(os.getenv("REFRESH_EXPIRES", 86400))
     basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

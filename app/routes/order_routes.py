@@ -21,7 +21,8 @@ from sqlalchemy import or_, cast
 from sqlalchemy.types import String
 from app.services.order_service import (
     save_uploaded_file,
-    calculate_minimum_price
+    calculate_minimum_price,
+    count_unpaid_unassigned_orders
 )
 from decimal import Decimal, ROUND_HALF_UP
 from app.services.wallet_service import has_sufficient_balance
@@ -395,13 +396,28 @@ def create_new_order():
             status=400
         )
 
-    if not has_sufficient_balance(uid, min_budget):
-        return error_response(
-            "INSUFFICIENT_WALLET_BALANCE",
-            f"You need at least {min_budget} in your wallet to create this order.",
-            status=400
-        )
+    # --------------------------------------------------
+    # FREE ORDER THRESHOLD LOGIC (NEW)
+    # --------------------------------------------------
+    FREE_ORDER_LIMIT = current_app.config.get("FREE_ORDER_LIMIT", 2)
 
+    unpaid_unassigned_count = count_unpaid_unassigned_orders(user)
+
+    # Case 1: User is BELOW limit → allow without balance check
+    if unpaid_unassigned_count < FREE_ORDER_LIMIT:
+        pass  # allow creation freely
+
+    # Case 2: User reached/exceeded limit → enforce balance
+    else:
+        if not has_sufficient_balance(uid, min_budget):
+            return error_response(
+                "ORDER_LIMIT_REACHED",
+                (
+                    f"You already have {unpaid_unassigned_count} active unpaid orders. "
+                    f"To create more orders, you need at least ${min_budget} in your wallet."
+                ),
+                status=400
+            )
 
     try:
         pages = int(form_data.get("pages", 1))
@@ -588,7 +604,7 @@ def patch_order(order_id):
             if client_budget < new_min_budget:
                 return error_response(
                     "BUDGET_ERROR",
-                    f"Minimum allowed budget is {new_min_budget}",
+                    f"Minimum allowed budget for your order is {new_min_budget}",
                     status=400,
                 )
 
