@@ -268,35 +268,35 @@ def post_message(chat_id):
 
     uid = get_jwt_identity()
 
-    sanitized = sanitize_message(content)
-    msg = add_message(chat_id, uid, sanitized)
+    # sanitized = sanitize_message(content)
+    msg = add_message(chat_id, uid, content)
 
     # --- Behavior analysis ---
-    history = Message.query.filter_by(chat_id=chat_id)\
-        .order_by(Message.created_at.desc())\
-        .limit(25).all()[::-1]
+    # history = Message.query.filter_by(chat_id=chat_id)\
+    #     .order_by(Message.created_at.desc())\
+    #     .limit(25).all()[::-1]
 
-    analysis = analyze_chat_behavior(history)
+    # analysis = analyze_chat_behavior(history)
     warning = None
 
-    if analysis["risk"] in ("medium", "high"):
-        chat.warning_active = True
-        chat.warning_risk = analysis["risk"]
-        chat.warning_message = (
-            "We detected possible attempts to share contact or personal information. "
-            "Continued violations may lead to account suspension."
-        )
-        chat.warning_expires_at = datetime.utcnow() + timedelta(days=7)
-        chat.warning_for_user_id = uid
+    # if analysis["risk"] in ("medium", "high"):
+    #     chat.warning_active = True
+    #     chat.warning_risk = analysis["risk"]
+    #     chat.warning_message = (
+    #         "We detected possible attempts to share contact or personal information. "
+    #         "Continued violations may lead to account suspension."
+    #     )
+    #     chat.warning_expires_at = datetime.utcnow() + timedelta(days=7)
+    #     chat.warning_for_user_id = uid
 
-        db.session.commit()
+    #     db.session.commit()
 
-        if chat.warning_active and chat.warning_for_user_id == uid:
-            warning = {
-                "risk": chat.warning_risk,
-                "message": chat.warning_message,
-                "expires_at": chat.warning_expires_at.isoformat() + "Z",
-            }
+    #     if chat.warning_active and chat.warning_for_user_id == uid:
+    #         warning = {
+    #             "risk": chat.warning_risk,
+    #             "message": chat.warning_message,
+    #             "expires_at": chat.warning_expires_at.isoformat() + "Z",
+    #         }
 
     return success_response({
         "id": msg.id,

@@ -48,13 +48,13 @@ def apply_writer():
 
 def admin_required(user):
     """Ensure that the current user has admin privileges."""
-    if not user or user.role.lower() != "admin":
+    if not user or user.role.lower() != "admin" or user.role.lower() != "super_admin":
         return False
     return True
 
 
 # ------------------------------------------
-# 1. LIST ALL APPLICATIONS (Already implemented)
+# 1. LIST ALL APPLICATIONS
 # ------------------------------------------
 @bp.route("/all", methods=["GET"])
 @jwt_required()

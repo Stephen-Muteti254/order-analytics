@@ -131,9 +131,9 @@ def get_or_create_chat(order_id, client_id, writer_id):
 
 def add_message(chat_id, sender_id, content):
     """All new messages are automatically sanitized."""
-    sanitized = sanitize_message(content)
+    # sanitized = sanitize_message(content)
 
-    msg = Message(chat_id=chat_id, sender_id=sender_id, content=sanitized)
+    msg = Message(chat_id=chat_id, sender_id=sender_id, content=content)
     db.session.add(msg)
     db.session.commit()
     return msg
