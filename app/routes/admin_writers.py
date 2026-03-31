@@ -20,7 +20,7 @@ from app.services.email_service import (
 bp = Blueprint("admin_writers", __name__, url_prefix="/api/v1/admin/writers")
 
 def admin_required(user):
-    return user and user.role == "admin"
+    return user and (user.role.lower() in ("admin", "super_admin"))
 
 @bp.route("", methods=["GET"])
 @jwt_required()

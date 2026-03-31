@@ -25,7 +25,7 @@ from app.services.email_service import send_notification_email
 bp = Blueprint("notifications", __name__, url_prefix="/api/v1/notifications")
 
 def admin_required(user):
-    return user and (user.role.lower() == "admin" or user.role.lower() == "super_admin")
+    return user and (user.role.lower() in ("admin", "super_admin"))
 
 @bp.route("/send", methods=["POST"])
 @jwt_required()

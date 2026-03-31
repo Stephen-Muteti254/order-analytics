@@ -30,7 +30,7 @@ def require_admin():
     uid = get_jwt_identity()
     user = User.query.get(uid)
 
-    if not user or user.role != "admin":
+    if not user or not user.role.lower() in ("admin", "super_admin"):
         return None, error_response("FORBIDDEN", "Admin access required", status=403)
 
     return user, None

@@ -177,7 +177,7 @@ def get_support_file(chat_id, message_id, filename):
     user = User.query.get(uid)
     chat = SupportChat.query.get_or_404(chat_id)
 
-    if chat.user_id != uid and user.role != "admin":
+    if chat.user_id != uid and not user.role.lower() in ("admin", "super_admin"):
         return error_response("FORBIDDEN", "Access denied", 403)
 
     root_dir = current_app.config["SUPPORT_UPLOADS_FOLDER"]
@@ -201,7 +201,7 @@ def list_support_chats():
     admin_id = get_jwt_identity()
     admin = User.query.get(admin_id)
 
-    if admin.role != "admin":
+    if not admin.role.lower() in ("admin", "super_admin"):
         return error_response("FORBIDDEN", "Admins only", 403)
 
     # ---- Pagination params ----
@@ -296,7 +296,7 @@ def resolve_chat(chat_id):
     uid = get_jwt_identity()
     user = User.query.get(uid)
 
-    if user.role != "admin":
+    if not user.role.lower() in ("admin", "super_admin"):
         return error_response("FORBIDDEN", "Admins only", 403)
 
     chat = SupportChat.query.get_or_404(chat_id)
