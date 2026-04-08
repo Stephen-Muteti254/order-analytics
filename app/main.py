@@ -5,6 +5,7 @@ import os
 from flask_cors import CORS
 import os
 from app.config import Config
+import re
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -45,8 +46,14 @@ def create_app(config_name=None):
     # parse env list for dev (localhost) and prod
     origins = [o.strip() for o in app.config["CORS_ORIGINS"].split(",")]
 
-    # Add regex for all subdomains of academichubpro.com
-    origins.append(r"https://.*\.academichubpro\.com")
+    origins.extend([
+        "https://academichubpro.com",
+        "https://itnest.org",
+    ])
+
+    # Subdomains (regex)
+    origins.append(re.compile(r"https://.*\.academichubpro\.com"))
+    origins.append(re.compile(r"https://.*\.itnest\.org"))
 
     CORS(
         app,
