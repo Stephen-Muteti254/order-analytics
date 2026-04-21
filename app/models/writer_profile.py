@@ -31,7 +31,7 @@ class WriterProfile(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "profile_image": self.profile_image,
-            "bio": self.bio,
+            "bio": self.bio or "",
             "specializations": self.specializations or [],
             "subjects": self.subjects or [],
             "education": self.education or [],

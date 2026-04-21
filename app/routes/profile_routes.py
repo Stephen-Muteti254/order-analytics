@@ -108,7 +108,14 @@ def get_profile():
 
     return success_response({
         "user": u.to_dict(),
-        "writer_profile": profile.to_dict() if profile else None,
+        "writer_profile": profile.to_dict() if profile else {
+            "profile_image": None,
+            "bio": "",
+            "specializations": [],
+            "subjects": [],
+            "education": [],
+            "languages": [],
+        },
         "metrics": {
             "rating": round(float(avg_rating), 2),
             "total_orders": total_orders,
