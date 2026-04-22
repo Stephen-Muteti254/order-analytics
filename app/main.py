@@ -90,6 +90,7 @@ def create_app(config_name=None):
     from insightpay.routes.admin import admin_bp as insightpay_admin_bp
     from insightpay.routes.wallet_routes import bp as insightpay_wallet_bp
     from insightpay.routes.dashboard_routes import bp as insightpay_dashboard_bp
+    from app.routes.assessment_routes import bp as assessment_bp
 
     # available orders optional
     try:
@@ -121,6 +122,7 @@ def create_app(config_name=None):
     app.register_blueprint(insightpay_admin_bp)
     app.register_blueprint(insightpay_wallet_bp)
     app.register_blueprint(insightpay_dashboard_bp)
+    app.register_blueprint(assessment_bp)
 
     # error handlers to match required error format
     from app.utils.response_formatter import error_response
