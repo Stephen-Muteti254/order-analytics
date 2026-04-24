@@ -15,6 +15,7 @@ from datetime import datetime, timedelta, timezone
 from app.extensions import db
 from insightpay.models.survey_attempt import SurveyAttempt
 from insightpay.models.survey_attachment import SurveyAttachment
+from insightpay.models.survey_response import SurveyResponse
 from insightpay.models.user import InsightPayUser
 import os
 from pathlib import Path
@@ -115,6 +116,12 @@ def complete_survey(survey_id):
         status="active"
     ).first_or_404()
 
+    if attempt.status == "completed":
+        return {
+            "success": True,
+            "message": "Already completed"
+        }
+
     # Normalize expires_at in case DB returned naive datetime
     expires_at = attempt.expires_at
     if expires_at.tzinfo is None:
@@ -144,14 +151,14 @@ def complete_survey(survey_id):
     attempt.completed_at = now
     attempt.status = "completed"
 
-    reward = attempt.reward_snapshot
+    reward = float(attempt.reward_snapshot)
 
     # Record financial transaction
     txn = InsightPayTransaction(
         user_id=user_id,
         amount=reward,
-        type="survey_reward_pending",
-        status="pending",
+        type="survey_reward",
+        status="completed",
         reference_id=attempt.id,
         description="Survey reward"
     )
@@ -160,7 +167,8 @@ def complete_survey(survey_id):
 
     # Credit user balance
     user = InsightPayUser.query.get_or_404(user_id)
-    user.pending_balance += reward
+    # user.pending_balance += reward
+    user.available_balance += reward
 
     db.session.commit()
 

@@ -19,6 +19,9 @@ class InsightPayTransaction(db.Model):
     type = db.Column(db.String(50), nullable=False)
     # survey_reward / withdrawal / admin_adjustment
 
+    status = db.Column(db.String(20), default="completed")  
+    # pending / completed / failed
+
     reference_id = db.Column(db.String(50))
     # survey_attempt_id
 
