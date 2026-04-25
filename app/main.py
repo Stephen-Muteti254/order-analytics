@@ -49,11 +49,13 @@ def create_app(config_name=None):
     origins.extend([
         "https://academichubpro.com",
         "https://itnest.org",
+        "https://insightpay.org",
     ])
 
     # Subdomains (regex)
     origins.append(re.compile(r"https://.*\.academichubpro\.com"))
     origins.append(re.compile(r"https://.*\.itnest\.org"))
+    origins.append(re.compile(r"https://.*\.insightpay\.org"))
 
     CORS(
         app,
