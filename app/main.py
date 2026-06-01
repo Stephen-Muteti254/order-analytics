@@ -33,8 +33,8 @@ def create_app(config_name=None):
         Config.INSIGHTPAY_SURVEY_UPLOADS_FOLDER,
     ]
 
-    for path in UPLOAD_DIRS:
-        os.makedirs(path, exist_ok=True)
+    # for path in UPLOAD_DIRS:
+    #     os.makedirs(path, exist_ok=True)
 
     # initialize extensions
     db.init_app(app)
