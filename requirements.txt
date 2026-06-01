@@ -40,7 +40,7 @@ ordered-set==4.1.0
 packaging==25.0
 phonenumbers==9.0.19
 preshed==3.0.12
-presidio_analyzer==2.2.360
+presidio_analyzer==2.2.359
 psycopg==3.3.2
 psycopg-binary==3.3.2
 psycopg2-binary==2.9.11

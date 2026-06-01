@@ -1,0 +1,59 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+
+<p>Hello <strong>{{ full_name }}</strong>,</p>
+
+<p>I hope you're doing well.</p>
+
+<p>
+I wanted to follow up and let you know that we’ve recently improved the
+<strong>{{ company_name }}</strong> order creation experience to make the
+process much faster and easier for students and professionals requesting help.
+</p>
+
+<p>
+Our updated order wizard now provides:
+</p>
+
+<ul style="padding-left:18px; margin:12px 0;">
+  <li>A simpler step-by-step submission process</li>
+  <li>Faster order placement with fewer required fields</li>
+  <li>Easier file uploads and assignment instructions</li>
+  <li>Clearer pricing and requirement organization</li>
+  <li>A smoother mobile and desktop experience</li>
+</ul>
+
+<p>
+Whether you need help with academic writing, technical assignments,
+editing, research support, or professional documents, submitting an
+order is now more streamlined and user-friendly.
+</p>
+
+<p>
+If you’d like to explore the updated platform or create a request,
+you can get started below.
+</p>
+
+<div style="margin:22px 0; text-align:left;">
+  <a href="{{ onboarding_url }}" class="btn-primary">
+    Create an Order
+  </a>
+</div>
+
+<p>
+As always, if you have any questions or need assistance, feel free to
+reply to this email and our team will be happy to help.
+</p>
+
+<p>
+Best regards,<br />
+<strong>The {{ company_name }} Team</strong>
+</p>
+
+<p style="font-size:13px; color:#777; margin-top:20px;">
+support@academichubpro.com<br />
+{{ onboarding_url }}
+</p>
+
+{% endblock %}

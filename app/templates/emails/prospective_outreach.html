@@ -1,0 +1,54 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+
+<p>Hello <strong>{{ full_name }}</strong>,</p>
+
+<p>I hope you're doing well.</p>
+
+<p>
+I wanted to briefly introduce <strong>{{ company_name }}</strong>,
+a platform that supports students and professionals with academic
+and technical projects.
+</p>
+
+<p>
+We assist with areas such as:
+</p>
+
+<ul style="padding-left:18px; margin:12px 0;">
+  <li>Research and academic writing support</li>
+  <li>Editing and proofreading</li>
+  <li>Coursework and project guidance</li>
+  <li>Programming and technical assignments</li>
+  <li>Data analysis and reports</li>
+  <li>Resume and professional document review</li>
+</ul>
+
+<p>
+Our aim is to make academic work more manageable for people balancing
+school, work, and personal responsibilities.
+</p>
+
+<p>
+If you ever need assistance or would like to learn more about how the
+platform works, feel free to reach out anytime.
+</p>
+
+<div style="margin:22px 0; text-align:left;">
+  <a href="{{ onboarding_url }}" class="btn-primary">
+    Visit {{ company_name }}
+  </a>
+</div>
+
+<p>
+Best regards,<br />
+<strong>The {{ company_name }} Team</strong>
+</p>
+
+<p style="font-size:13px; color:#777; margin-top:20px;">
+support@academichubpro.com<br />
+{{ onboarding_url }}
+</p>
+
+{% endblock %}
